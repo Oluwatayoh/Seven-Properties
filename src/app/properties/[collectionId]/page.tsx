@@ -21,7 +21,8 @@ type Props = {
   };
 };
 
-export default function CollectionPage({ params: { collectionId } }: Props) {
+export default function CollectionPage({ params }: Props) {
+  const { collectionId } = params;
   const firestore = useFirestore();
 
   const collectionQuery = useMemo(() => doc(firestore, 'propertyCollections', collectionId), [firestore, collectionId]);
