@@ -37,10 +37,14 @@ export default function Header() {
           </nav>
         </div>
         <nav className="flex items-center">
-          {user && (
+          {user ? (
             <Link href="/admin" className="flex items-center space-x-2 text-sm font-medium text-foreground/80 hover:text-primary">
               <Shield className="h-5 w-5" />
               <span>Admin</span>
+            </Link>
+          ) : (
+             <Link href="/login" className="flex items-center space-x-2 text-sm font-medium text-foreground/80 hover:text-primary">
+              <span>Login</span>
             </Link>
           )}
         </nav>
