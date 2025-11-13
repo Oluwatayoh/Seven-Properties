@@ -1,106 +1,133 @@
 {
   "entities": {
-    "Collection": {
-      "title": "Property Collection",
-      "description": "A collection of related properties, like a building or an estate.",
+    "Property": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Property",
       "type": "object",
+      "description": "Represents a real estate property offered by Seven Properties.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "The unique identifier for the collection."
+          "description": "Unique identifier for the property."
         },
-        "title": {
+        "name": {
           "type": "string",
-          "description": "The name of the collection."
+          "description": "Name of the property."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the property."
         },
         "location": {
           "type": "string",
-          "description": "The geographical location of the collection."
+          "description": "Location of the property (e.g., Ikoyi, Banana Island, Victoria Island)."
         },
-        "description": {
+        "price": {
+          "type": "number",
+          "description": "Price of the property."
+        },
+        "imageUrl": {
           "type": "string",
-          "description": "A brief description of the collection."
+          "description": "URL of the property's image.",
+          "format": "uri"
         },
-        "tags": {
+        "amenities": {
           "type": "array",
+          "description": "A list of amenities offered by the property.",
           "items": {
             "type": "string"
-          },
-          "description": "Descriptive tags for the collection."
+          }
         }
       },
-      "required": ["id", "title", "location", "description"]
+      "required": [
+        "id",
+        "name",
+        "description",
+        "location",
+        "price",
+        "imageUrl"
+      ]
     },
-    "Property": {
-      "title": "Individual Property",
-      "description": "A single property unit within a collection.",
+    "Content": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Content",
       "type": "object",
+      "description": "Represents content targeted towards HNWI.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "The unique identifier for the property."
-        },
-        "collectionId": {
-          "type": "string",
-          "description": "The ID of the collection this property belongs to."
+          "description": "Unique identifier for the content."
         },
         "title": {
           "type": "string",
-          "description": "The title or name of the property."
+          "description": "Title of the content."
         },
-        "price": {
+        "body": {
           "type": "string",
-          "description": "The asking price for the property."
+          "description": "Main body of the content."
         },
-        "bedrooms": {
-          "type": "number",
-          "description": "The number of bedrooms."
-        },
-        "bathrooms": {
-          "type": "number",
-          "description": "The number of bathrooms."
-        },
-        "sqft": {
-          "type": "number",
-          "description": "The total square footage of the property."
-        },
-        "description": {
-          "type": "string",
-          "description": "A detailed description of the property."
-        },
-        "imageUrls": {
+        "keywords": {
           "type": "array",
+          "description": "Keywords associated with the content for SEO purposes.",
           "items": {
             "type": "string"
-          },
-          "description": "A list of URLs for the property images."
+          }
         },
-        "imageHints": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Hints for AI image generation or search."
+        "contentType": {
+          "type": "string",
+          "description": "Type of content (e.g., article, blog post, video)."
         }
       },
-      "required": ["id", "collectionId", "title", "price", "bedrooms", "bathrooms", "sqft", "description", "imageUrls"]
+      "required": [
+        "id",
+        "title",
+        "body",
+        "keywords",
+        "contentType"
+      ]
     }
   },
   "auth": {
-    "providers": ["google.com"]
+    "providers": [
+      "password",
+      "anonymous"
+    ]
   },
   "firestore": {
-    "/collections/{collectionId}": {
-      "schema": {
-        "$ref": "#/entities/Collection"
+    "structure": [
+      {
+        "path": "/properties/{propertyId}",
+        "definition": {
+          "entityName": "Property",
+          "schema": {
+            "$ref": "#/backend/entities/Property"
+          },
+          "description": "Stores real estate property data. Accessible to all users.",
+          "params": [
+            {
+              "name": "propertyId",
+              "description": "Unique identifier for the property."
+            }
+          ]
+        }
       },
-      "description": "Stores property collections."
-    },
-    "/properties/{propertyId}": {
-      "schema": {
-        "$ref": "#/entities/Property"
-      },
-      "description": "Stores individual property listings."
-    }
+      {
+        "path": "/content/{contentId}",
+        "definition": {
+          "entityName": "Content",
+          "schema": {
+            "$ref": "#/backend/entities/Content"
+          },
+          "description": "Stores content targeted towards HNWI. Accessible to all users.",
+          "params": [
+            {
+              "name": "contentId",
+              "description": "Unique identifier for the content."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure prioritizes authorization independence and supports the core features of the Seven Properties Bespoke application.  The structure is segregated to isolate data with different security postures. Properties and Content, the two core entities, are stored in separate collections at the root level. There is no user-specific data in this application that requires path-based ownership. This greatly simplifies the structure. All content is available to all users, so it's modeled in root collections.\n\n**Authorization Independence:** Authorization is simplified because all data is broadly accessible. There is no reliance on `get()` calls to parent documents, ensuring atomic operations and easier debugging. No membership maps are needed. \n\n**QAPs (Rules are not Filters):** The structure allows for secure listing operations because all documents within the `properties` and `content` collections share the same security requirements (publicly readable). Rules do not act as filters because there are no mixed-access documents in these collections.\n\n**Specific Decisions:**\n*   `/properties`: Stores the real estate property data. The structure is flat as there is no ownership. Access is public.\n*   `/content`: Stores content targeted towards HNWI. Access is public."
   }
 }

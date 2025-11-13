@@ -1,0 +1,48 @@
+/**
+ * @fileoverview Firestore Security Rules for Seven Properties Bespoke.
+ *
+ * Core Philosophy:
+ * This ruleset provides public read access to all data (properties and content) while restricting write access, although write access is not enforced in this prototype, allowing for easy updates in the early stages of the project.
+ *
+ * Data Structure:
+ * - /properties/{propertyId}: Stores real estate property data.
+ * - /content/{contentId}: Stores content targeted towards HNWI.
+ *
+ * Key Security Decisions:
+ * - Public read access for all properties and content.
+ * - Write access should be restricted for production, but this is a prototype and not enforced.
+ *
+ * Denormalization for Authorization:
+ *  - Not applicable, as there is no write restriction.
+ * Structural Segregation:
+ * - Data is segregated into separate collections based on entity type.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Grants public read access to property data and allows owner-only writes.
+     * @path /properties/{propertyId}
+     * @allow (get, list) - Any user can read property data.
+     * @deny (create, update, delete) - No user can modify property data.
+     * @principle Allows public access for reads.
+     */
+    match /properties/{propertyId} {
+      allow get, list: if true;
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+    }
+
+    /**
+     * @description Grants public read access to content data and allows owner-only writes.
+     * @path /content/{contentId}
+     * @allow (get, list) - Any user can read content data.
+     * @deny (create, update, delete) - No user can modify content data.
+     * @principle Allows public access for reads.
+     */
+    match /content/{contentId} {
+      allow get, list: if true;
+      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+    }
+  }
+}
