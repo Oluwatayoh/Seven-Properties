@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "Collection": {
+      "title": "Property Collection",
+      "description": "A collection of related properties, like a building or an estate.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the collection."
+        },
+        "title": {
+          "type": "string",
+          "description": "The name of the collection."
+        },
+        "location": {
+          "type": "string",
+          "description": "The geographical location of the collection."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the collection."
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Descriptive tags for the collection."
+        }
+      },
+      "required": ["id", "title", "location", "description"]
+    },
+    "Property": {
+      "title": "Individual Property",
+      "description": "A single property unit within a collection.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The unique identifier for the property."
+        },
+        "collectionId": {
+          "type": "string",
+          "description": "The ID of the collection this property belongs to."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title or name of the property."
+        },
+        "price": {
+          "type": "string",
+          "description": "The asking price for the property."
+        },
+        "bedrooms": {
+          "type": "number",
+          "description": "The number of bedrooms."
+        },
+        "bathrooms": {
+          "type": "number",
+          "description": "The number of bathrooms."
+        },
+        "sqft": {
+          "type": "number",
+          "description": "The total square footage of the property."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the property."
+        },
+        "imageUrls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of URLs for the property images."
+        },
+        "imageHints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Hints for AI image generation or search."
+        }
+      },
+      "required": ["id", "collectionId", "title", "price", "bedrooms", "bathrooms", "sqft", "description", "imageUrls"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com"]
+  },
+  "firestore": {
+    "/collections/{collectionId}": {
+      "schema": {
+        "$ref": "#/entities/Collection"
+      },
+      "description": "Stores property collections."
+    },
+    "/properties/{propertyId}": {
+      "schema": {
+        "$ref": "#/entities/Property"
+      },
+      "description": "Stores individual property listings."
+    }
+  }
+}
