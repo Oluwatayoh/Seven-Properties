@@ -20,7 +20,18 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+
+
+// Helper function to read file as Data URL
+const readFileAsDataURL = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
 
 interface ManagePropertiesProps {
     collection: WithId<PropertyCollection>;
@@ -37,13 +48,29 @@ export default function ManageProperties({ collection: currentCollection, onBack
 
   const handleFormSubmit = async (data: PropertyFormState) => {
     try {
+        let imageUrls: string[] = [];
+        if (editingProperty !== 'new' && editingProperty?.imageUrls) {
+            imageUrls = editingProperty.imageUrls;
+        }
+
+        if (data.images && data.images.length > 0) {
+            const uploadedImageUrls = await Promise.all(
+                Array.from(data.images).map(file => readFileAsDataURL(file))
+            );
+            imageUrls = [...imageUrls, ...uploadedImageUrls];
+        }
+
+
       const propertyData = {
-        ...data,
+        title: data.title,
+        description: data.description,
+        price: data.price,
+        propertyType: data.propertyType,
         bedrooms: Number(data.bedrooms),
         bathrooms: Number(data.bathrooms),
         sqft: Number(data.sqft),
-        imageUrls: data.imageUrls.split(',').map(url => url.trim()).filter(Boolean),
-        imageHints: data.imageHints.split(',').map(hint => hint.trim()).filter(Boolean),
+        imageUrls: imageUrls,
+        imageHints: data.imageHints?.split(',').map(hint => hint.trim()).filter(Boolean) || [],
       };
 
       if (editingProperty === 'new') {
@@ -55,6 +82,7 @@ export default function ManageProperties({ collection: currentCollection, onBack
       }
       setEditingProperty(null);
     } catch (e) {
+      console.error(e);
       toast({ variant: 'destructive', title: 'Error', description: 'An error occurred.' });
     }
   };
@@ -69,10 +97,13 @@ export default function ManageProperties({ collection: currentCollection, onBack
   };
 
   if (editingProperty) {
+      const initialData = editingProperty === 'new' 
+        ? undefined 
+        : { ...editingProperty, imageUrls: editingProperty.imageUrls };
       return <PropertyForm 
         onSubmit={handleFormSubmit}
         onCancel={() => setEditingProperty(null)}
-        initialData={editingProperty === 'new' ? undefined : editingProperty}
+        initialData={initialData}
       />
   }
 

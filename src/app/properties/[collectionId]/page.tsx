@@ -8,7 +8,7 @@ import { Property, PropertyCollection } from '@/lib/properties-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
-import { BedDouble, Bath, Square, Loader2 } from 'lucide-react';
+import { BedDouble, Bath, Square, Loader2, Building } from 'lucide-react';
 import { AnimatedSection } from '@/components/AnimatedSection';
 import { useFirestore } from '@/firebase';
 import { useDoc, useCollection, WithId } from '@/firebase';
@@ -99,6 +99,10 @@ export default function CollectionPage({ params }: Props) {
                       <CardContent>
                         <p className="font-body text-lg text-foreground/80 mb-6">{property.description}</p>
                         <div className="flex items-center space-x-6 text-foreground">
+                            <div className="flex items-center space-x-2">
+                                <Building className="h-5 w-5 text-accent"/>
+                                <span className="font-body">{property.propertyType}</span>
+                            </div>
                             <div className="flex items-center space-x-2">
                                 <BedDouble className="h-5 w-5 text-accent"/>
                                 <span className="font-body">{property.bedrooms} Beds</span>

@@ -30,6 +30,11 @@
         "bedrooms": { "type": "number", "description": "Number of bedrooms." },
         "bathrooms": { "type": "number", "description": "Number of bathrooms." },
         "sqft": { "type": "number", "description": "Total square footage." },
+        "propertyType": {
+          "type": "string",
+          "description": "The type of property.",
+          "enum": ["Land", "Apartment", "Commercial"]
+        },
         "imageUrls": {
           "type": "array",
           "description": "URLs of the property's images.",
@@ -41,7 +46,7 @@
             "items": { "type": "string" }
         }
       },
-      "required": ["id", "title", "description", "price", "bedrooms", "bathrooms", "sqft", "imageUrls"]
+      "required": ["id", "title", "description", "price", "bedrooms", "bathrooms", "sqft", "imageUrls", "propertyType"]
     },
     "Content": {
       "$schema": "http://json-schema.org/draft-07/schema#",

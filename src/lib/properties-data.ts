@@ -20,6 +20,7 @@ export type Property = {
   bathrooms: number;
   sqft: number;
   description: string;
+  propertyType: 'Land' | 'Apartment' | 'Commercial';
   imageUrls: string[];
   imageHints: string[];
 };

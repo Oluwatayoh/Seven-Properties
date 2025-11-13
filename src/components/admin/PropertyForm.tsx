@@ -10,6 +10,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { useFormStatus } from 'react-dom';
 import { Loader2 } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useState } from 'react';
+import Image from 'next/image';
 
 const formSchema = z.object({
   title: z.string().min(3, 'Title is required.'),
@@ -18,7 +21,8 @@ const formSchema = z.object({
   bedrooms: z.coerce.number().int().min(0, 'Must be a positive number.'),
   bathrooms: z.coerce.number().int().min(0, 'Must be a positive number.'),
   sqft: z.coerce.number().int().min(0, 'Must be a positive number.'),
-  imageUrls: z.string().min(1, 'At least one image URL is required.'),
+  propertyType: z.enum(['Land', 'Apartment', 'Commercial']),
+  images: z.custom<FileList>().optional(),
   imageHints: z.string().optional(),
 });
 
@@ -27,7 +31,7 @@ export type PropertyFormState = z.infer<typeof formSchema>;
 interface PropertyFormProps {
   onSubmit: (data: PropertyFormState) => void | Promise<void>;
   onCancel: () => void;
-  initialData?: Partial<PropertyFormState>;
+  initialData?: Partial<Omit<PropertyFormState, 'images'> & { imageUrls: string[] }>;
 }
 
 function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
@@ -40,6 +44,8 @@ function SubmitButton({ isSubmitting }: { isSubmitting: boolean }) {
   }
 
 export function PropertyForm({ onSubmit, onCancel, initialData }: PropertyFormProps) {
+  const [imagePreviews, setImagePreviews] = useState<string[]>(initialData?.imageUrls || []);
+
   const form = useForm<PropertyFormState>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -49,7 +55,7 @@ export function PropertyForm({ onSubmit, onCancel, initialData }: PropertyFormPr
         bedrooms: initialData?.bedrooms || 0,
         bathrooms: initialData?.bathrooms || 0,
         sqft: initialData?.sqft || 0,
-        imageUrls: Array.isArray(initialData?.imageUrls) ? initialData.imageUrls.join(', ') : '',
+        propertyType: initialData?.propertyType || 'Apartment',
         imageHints: Array.isArray(initialData?.imageHints) ? initialData.imageHints.join(', ') : '',
     },
   });
@@ -59,6 +65,16 @@ export function PropertyForm({ onSubmit, onCancel, initialData }: PropertyFormPr
   const handleFormSubmit = async (data: PropertyFormState) => {
     await onSubmit(data);
   }
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newPreviews = Array.from(files).map(file => URL.createObjectURL(file));
+      setImagePreviews(prev => [...prev, ...newPreviews]);
+      form.setValue('images', files);
+    }
+  };
+
 
   return (
     <Card>
@@ -73,6 +89,28 @@ export function PropertyForm({ onSubmit, onCancel, initialData }: PropertyFormPr
         <CardContent>
             <Form {...form}>
             <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="propertyType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Property Type</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a property type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Apartment">Apartment</SelectItem>
+                          <SelectItem value="Land">Land</SelectItem>
+                          <SelectItem value="Commercial">Commercial Properties</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                 control={form.control}
                 name="title"
@@ -153,19 +191,30 @@ export function PropertyForm({ onSubmit, onCancel, initialData }: PropertyFormPr
                         )}
                     />
                 </div>
-                <FormField
-                control={form.control}
-                name="imageUrls"
-                render={({ field }) => (
+                 <FormField
+                  control={form.control}
+                  name="images"
+                  render={({ field }) => (
                     <FormItem>
-                    <FormLabel>Image URLs (comma-separated)</FormLabel>
-                    <FormControl>
-                        <Textarea placeholder="https://picsum.photos/1, https://picsum.photos/2" {...field} />
-                    </FormControl>
-                    <FormMessage />
+                      <FormLabel>Images</FormLabel>
+                      <FormControl>
+                        <Input type="file" multiple onChange={handleImageChange} />
+                      </FormControl>
+                      <FormMessage />
                     </FormItem>
-                )}
+                  )}
                 />
+
+                {imagePreviews.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {imagePreviews.map((src, index) => (
+                            <div key={index} className="relative aspect-video">
+                                <Image src={src} alt={`Preview ${index + 1}`} fill className="object-cover rounded-md" />
+                            </div>
+                        ))}
+                    </div>
+                )}
+                
                 <FormField
                 control={form.control}
                 name="imageHints"
