@@ -28,8 +28,15 @@ export default function Footer() {
               </a>
             </div>
           </div>
-          <div className="mt-12 grid grid-cols-2 gap-8 xl:mt-0 xl:col-span-2">
-            {/* Can add more footer links here if needed */}
+          <div className="mt-12 grid grid-cols-1 gap-8 xl:mt-0 xl:col-span-2 xl:text-right">
+             <div className="font-body">
+                <h3 className="font-headline text-lg font-semibold text-accent">Contact Us</h3>
+                <p className="mt-4 text-base text-primary-foreground/80">123 Luxury Avenue, Ikoyi</p>
+                <p className="text-base text-primary-foreground/80">Lagos, Nigeria</p>
+                <p className="mt-4 text-base text-primary-foreground/80">
+                  Phone: +234 (800) 123-4567
+                </p>
+              </div>
           </div>
         </div>
         <div className="mt-12 border-t border-primary-foreground/20 pt-8">
