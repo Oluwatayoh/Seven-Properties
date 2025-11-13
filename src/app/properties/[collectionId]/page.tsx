@@ -60,7 +60,7 @@ export default function CollectionPage() {
         
         <div className="container mx-auto px-6 lg:px-8 pb-24 sm:pb-32">
           <div className="space-y-16">
-            {properties && properties.map((property: WithId<Property>, index: number) => (
+            {properties && properties.length > 0 && properties.map((property: WithId<Property>, index: number) => (
               <AnimatedSection key={property.id}>
                 <Card className="overflow-hidden shadow-lg border-accent/20 bg-card">
                   <div className="grid md:grid-cols-2">
@@ -130,10 +130,13 @@ export default function CollectionPage() {
                     </div>
                     <CardHeader>
                       <CardTitle className="font-headline text-4xl text-primary">Unveiling Soon</CardTitle>
+                      <CardDescription className="font-body text-lg text-foreground/80">
+                        Properties for the "{collectionData.title}" collection are being prepared.
+                      </CardDescription>
                     </CardHeader>
                     <CardContent>
                       <p className="mt-2 font-body text-lg text-foreground/80 max-w-xl mx-auto">
-                        Exquisite properties for this exclusive collection are being finalized. Check back shortly for a showcase of unparalleled luxury.
+                        Exquisite properties for this exclusive collection are being finalized. Kindly check back later for a showcase of unparalleled luxury.
                       </p>
                     </CardContent>
                   </Card>
