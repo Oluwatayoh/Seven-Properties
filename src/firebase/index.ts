@@ -1,4 +1,3 @@
-
 'use client';
 
 import { getApp, getApps, initializeApp } from 'firebase/app';
@@ -16,6 +15,6 @@ function initializeFirebase() {
 
 export { initializeFirebase };
 
-export * from './provider';
-export * from './client-provider';
-export * from './auth/use-user';
+export * from './provider.js';
+export * from './client-provider.js';
+export * from './auth/use-user.js';
