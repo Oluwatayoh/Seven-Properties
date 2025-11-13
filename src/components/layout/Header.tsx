@@ -15,6 +15,14 @@ export default function Header() {
             <Building2 className="h-6 w-6 text-accent" />
             <span className="font-bold font-headline text-lg text-primary">Seven Properties</span>
           </Link>
+          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+            <Link href="/#about-us" className="text-foreground/80 hover:text-primary transition-colors">
+              About Us
+            </Link>
+            <Link href="/#contact-us" className="text-foreground/80 hover:text-primary transition-colors">
+              Contact Us
+            </Link>
+          </nav>
         </div>
         <nav className="flex items-center">
           {user && (

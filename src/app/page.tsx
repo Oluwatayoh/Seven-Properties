@@ -5,6 +5,7 @@ import About from '@/components/sections/About';
 import Properties from '@/components/sections/Properties';
 import Diaspora from '@/components/sections/Diaspora';
 import KeywordTool from '@/components/sections/KeywordTool';
+import ContactUs from '@/components/sections/ContactUs';
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
         <About />
         <Properties />
         <Diaspora />
+        <ContactUs />
         <KeywordTool />
       </main>
       <Footer />

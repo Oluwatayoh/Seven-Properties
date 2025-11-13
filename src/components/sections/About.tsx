@@ -21,10 +21,10 @@ const features = [
 
 export default function About() {
   return (
-    <AnimatedSection className="py-24 sm:py-32">
+    <AnimatedSection id="about-us" className="py-24 sm:py-32">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="font-headline text-4xl text-primary">The Art of Bespoke Living</h2>
+          <h2 className="font-headline text-4xl text-primary">About Us</h2>
           <p className="mt-6 font-body text-lg leading-8 text-foreground/80 max-w-2xl mx-auto">
             Seven Properties is more than a developer; we are curators of an exclusive lifestyle. We cater to a discerning clientele who appreciate artistry, discretion, and unparalleled quality in the world's most dynamic city.
           </p>
