@@ -1,13 +1,19 @@
+'use client';
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { propertiesData, collectionsData, Property } from '@/lib/properties-data';
+import { Property, PropertyCollection } from '@/lib/properties-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
-import { BedDouble, Bath, Square } from 'lucide-react';
+import { BedDouble, Bath, Square, Loader2 } from 'lucide-react';
 import { AnimatedSection } from '@/components/AnimatedSection';
+import { useFirestore } from '@/firebase';
+import { useDoc, useCollection, WithId } from '@/firebase';
+import { doc, collection } from 'firebase/firestore';
+import { useMemo } from 'react';
 
 type Props = {
   params: {
@@ -17,10 +23,28 @@ type Props = {
 
 export default function CollectionPage({ params }: Props) {
   const { collectionId } = params;
-  const collection = collectionsData.find((c) => c.id === collectionId);
-  const properties = propertiesData.filter((p) => p.collectionId === collectionId);
+  const firestore = useFirestore();
 
-  if (!collection) {
+  const collectionQuery = useMemo(() => doc(firestore, 'propertyCollections', collectionId), [firestore, collectionId]);
+  const { data: collectionData, isLoading: isCollectionLoading } = useDoc<PropertyCollection>(collectionQuery);
+
+  const propertiesQuery = useMemo(() => collection(firestore, 'propertyCollections', collectionId, 'properties'), [firestore, collectionId]);
+  const { data: properties, isLoading: arePropertiesLoading } = useCollection<Property>(propertiesQuery);
+
+
+  if (isCollectionLoading || arePropertiesLoading) {
+    return (
+       <div className="flex min-h-screen flex-col bg-background text-foreground">
+        <Header />
+        <main className="flex-1 flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        </main>
+        <Footer />
+    </div>
+    );
+  }
+
+  if (!collectionData) {
     notFound();
   }
 
@@ -31,9 +55,9 @@ export default function CollectionPage({ params }: Props) {
         <AnimatedSection className="py-24 sm:py-32">
           <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center">
-              <h1 className="font-headline text-5xl md:text-7xl text-primary">{collection.title}</h1>
+              <h1 className="font-headline text-5xl md:text-7xl text-primary">{collectionData.title}</h1>
               <p className="mt-6 font-body text-lg leading-8 text-foreground/80 max-w-3xl mx-auto">
-                {collection.description}
+                {collectionData.description}
               </p>
             </div>
           </div>
@@ -41,7 +65,7 @@ export default function CollectionPage({ params }: Props) {
         
         <div className="container mx-auto px-6 lg:px-8 pb-24 sm:pb-32">
           <div className="space-y-16">
-            {properties.map((property: Property, index: number) => (
+            {properties && properties.map((property: WithId<Property>, index: number) => (
               <AnimatedSection key={property.id}>
                 <Card className="overflow-hidden shadow-lg border-accent/20 bg-card">
                   <div className="grid md:grid-cols-2">
@@ -57,7 +81,7 @@ export default function CollectionPage({ params }: Props) {
                                   fill
                                   sizes="(max-width: 768px) 100vw, 50vw"
                                   className="object-cover"
-                                  data-ai-hint={property.imageHints[i] || ''}
+                                  data-ai-hint={property.imageHints && property.imageHints[i] ? property.imageHints[i] : ''}
                                 />
                               </div>
                             </CarouselItem>
@@ -99,7 +123,7 @@ export default function CollectionPage({ params }: Props) {
                 </Card>
               </AnimatedSection>
             ))}
-             {properties.length === 0 && (
+             {(!properties || properties.length === 0) && (
                 <div className="text-center py-16">
                     <h2 className="font-headline text-3xl text-primary">Coming Soon</h2>
                     <p className="mt-4 font-body text-lg text-foreground/80">

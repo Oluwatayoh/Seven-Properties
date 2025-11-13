@@ -2,18 +2,19 @@
  * @fileoverview Firestore Security Rules for Seven Properties Bespoke.
  *
  * Core Philosophy:
- * This ruleset provides public read access to all data (properties and content) while restricting write access, although write access is not enforced in this prototype, allowing for easy updates in the early stages of the project.
+ * This ruleset provides public read access to all data (properties and content) while restricting write access to authenticated users.
  *
  * Data Structure:
- * - /properties/{propertyId}: Stores real estate property data.
+ * - /propertyCollections/{collectionId}
+ * - /propertyCollections/{collectionId}/properties/{propertyId}
  * - /content/{contentId}: Stores content targeted towards HNWI.
  *
  * Key Security Decisions:
  * - Public read access for all properties and content.
- * - Write access should be restricted for production, but this is a prototype and not enforced.
+ * - Write access is restricted to authenticated users. In a production app, this would be further restricted to admin roles.
  *
  * Denormalization for Authorization:
- *  - Not applicable, as there is no write restriction.
+ *  - Not applicable, as there is no ownership based authorization.
  * Structural Segregation:
  * - Data is segregated into separate collections based on entity type.
  */
@@ -22,15 +23,17 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     /**
-     * @description Grants public read access to property data and allows owner-only writes.
-     * @path /properties/{propertyId}
-     * @allow (get, list) - Any user can read property data.
-     * @deny (create, update, delete) - No user can modify property data.
-     * @principle Allows public access for reads.
+     * @description Grants public read access to property collections and their properties.
+     * Write access is restricted to authenticated users.
      */
-    match /properties/{propertyId} {
+    match /propertyCollections/{collectionId} {
       allow get, list: if true;
-      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow write: if request.auth != null;
+
+      match /properties/{propertyId} {
+        allow get, list: if true;
+        allow write: if request.auth != null;
+      }
     }
 
     /**

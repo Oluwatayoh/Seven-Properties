@@ -1,22 +1,3 @@
 {
-  "placeholderImages": [
-    {
-      "id": "ikoyi-residence",
-      "description": "An aerial view of a modern luxury apartment building in Ikoyi with a swimming pool.",
-      "imageUrl": "https://images.unsplash.com/photo-1597285112431-115a1f48bde2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsdXh1cnklMjBhcGFydG1lbnR8ZW58MHx8fHwxNzYyOTUzNzE3fDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "luxury apartment"
-    },
-    {
-      "id": "banana-island-villa",
-      "description": "The interior of a spacious, minimalist living room with floor-to-ceiling windows overlooking the water.",
-      "imageUrl": "https://images.unsplash.com/photo-1708113388262-17fdf0e21205?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxtb2Rlcm4lMjBsaXZpbmdyb29tfGVufDB8fHx8MTc2MzAwNjk3NXww&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "modern livingroom"
-    },
-    {
-      "id": "vi-penthouse",
-      "description": "A rooftop penthouse terrace with elegant seating, greenery, and a view of the city skyline at dusk.",
-      "imageUrl": "https://images.unsplash.com/photo-1705095605806-4b2936e90471?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cm9vZnRvcCUyMHRlcnJhY2V8ZW58MHx8fHwxNzYyOTg2ODQzfDA&ixlib=rb-4.1.0&q=80&w=1080",
-      "imageHint": "rooftop terrace"
-    }
-  ]
+  "placeholderImages": []
 }
