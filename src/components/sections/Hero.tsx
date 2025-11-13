@@ -3,24 +3,23 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AnimatedSection } from '@/components/AnimatedSection';
+import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      <div className="absolute inset-0 z-[-1]">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          poster="https://picsum.photos/seed/hero/1800/1200"
-        >
-          <source src="https://videos.pexels.com/video-files/8053676/8053676-hd_1920_1080_25fps.mp4" type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
-      </div>
+    <div className="relative h-screen w-full">
+        {/* Parallax Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+            <Image
+                src="https://picsum.photos/seed/hero/1800/1200"
+                alt="Luxurious modern home exterior"
+                fill
+                className="object-cover"
+                priority
+                data-ai-hint="luxury estate"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+        </div>
       
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center text-white p-4">
         <AnimatedSection as="div" className="w-full">
