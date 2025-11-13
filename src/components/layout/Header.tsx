@@ -19,15 +19,6 @@ export default function Header() {
             <span className="font-bold font-headline text-lg text-primary">Seven Properties</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-             <Link
-              href="/collections"
-              className={cn(
-                'transition-colors hover:text-primary',
-                pathname.startsWith('/collections') || pathname.startsWith('/properties') ? 'text-primary' : 'text-foreground/80'
-              )}
-            >
-              Collections
-            </Link>
             <Link
               href="/about"
               className={cn(
