@@ -2,7 +2,7 @@
 
 import { Building2, Shield } from 'lucide-react';
 import Link from 'next/link';
-import { useUser } from '@/firebase';
+import { useUser } from '@/firebase/auth/use-user';
 
 export default function Header() {
   const { user } = useUser();
