@@ -3,7 +3,7 @@
 import { getApp, getApps, initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { firebaseConfig } from './config';
+import { firebaseConfig } from '@/firebase/config';
 
 function initializeFirebase() {
   const isInitialized = getApps().length > 0;
@@ -15,6 +15,6 @@ function initializeFirebase() {
 
 export { initializeFirebase };
 
-export * from './provider.js';
-export * from './client-provider.js';
-export * from './auth/use-user.js';
+export * from './provider';
+export * from './client-provider';
+export * from './auth/use-user';
