@@ -4,6 +4,7 @@ import { Building2, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { useUser } from '@/firebase/auth/use-user';
 import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function Header() {
   const { user } = useUser();
@@ -28,11 +29,17 @@ export default function Header() {
             <span className="font-bold font-headline text-lg text-primary">Seven Properties</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link
+              href="/about"
+              className={cn(
+                'transition-colors hover:text-primary',
+                pathname === '/about' ? 'text-primary' : 'text-foreground/80'
+              )}
+            >
               About Us
             </Link>
-            <Link 
-              href="/#contact-us" 
+            <Link
+              href="/#contact-us"
               onClick={handleContactClick}
               className="text-foreground/80 hover:text-primary transition-colors"
             >
@@ -42,10 +49,10 @@ export default function Header() {
         </div>
         <nav className="flex items-center">
           {user && (
-             <Link href="/admin" className="flex items-center space-x-2 text-sm font-medium text-foreground/80 hover:text-primary">
-                <Shield className="h-5 w-5" />
-                <span>Admin</span>
-              </Link>
+            <Link href="/admin" className="flex items-center space-x-2 text-sm font-medium text-foreground/80 hover:text-primary">
+              <Shield className="h-5 w-5" />
+              <span>Admin</span>
+            </Link>
           )}
         </nav>
       </div>
