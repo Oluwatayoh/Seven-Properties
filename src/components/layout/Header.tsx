@@ -10,16 +10,6 @@ export default function Header() {
   const { user } = useUser();
   const pathname = usePathname();
 
-  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (pathname === '/') {
-      e.preventDefault();
-      const contactSection = document.getElementById('contact-us');
-      if (contactSection) {
-        contactSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-14 max-w-screen-2xl items-center">
@@ -40,7 +30,6 @@ export default function Header() {
             </Link>
             <Link
               href="/#contact-us"
-              onClick={handleContactClick}
               className="text-foreground/80 hover:text-primary transition-colors"
             >
               Contact Us
