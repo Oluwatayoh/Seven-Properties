@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { AnimatedSection } from '@/components/AnimatedSection';
 
@@ -22,8 +23,8 @@ export default function Hero() {
             <p className="mt-4 max-w-2xl mx-auto font-body text-lg md:text-xl text-neutral-200 drop-shadow-md">
               Discover Seven Properties—where architectural brilliance meets bespoke luxury in the heart of Lagos.
             </p>
-            <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90 font-body">
-              Explore Residences
+            <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90 font-body" asChild>
+              <Link href="/properties/ikoyi-residence">Explore Residences</Link>
             </Button>
         </AnimatedSection>
       </div>

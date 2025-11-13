@@ -1,11 +1,13 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin } from 'lucide-react';
+import { MapPin, ArrowRight } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { AnimatedSection } from '@/components/AnimatedSection';
+import { Button } from '@/components/ui/button';
 
-const properties = [
+const collections = [
   {
     id: 'ikoyi-residence',
     title: 'The Ikoyi Collection',
@@ -39,10 +41,10 @@ export default function Properties() {
           </p>
         </div>
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {properties.map((prop) => {
+          {collections.map((prop) => {
             const image = propertyImages.find((img) => img.id === prop.id);
             return (
-              <Card key={prop.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 border-accent/20 bg-card">
+              <Card key={prop.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 border-accent/20 bg-card flex flex-col">
                 <CardHeader className="p-0">
                   {image && (
                     <div className="relative h-64 w-full">
@@ -64,11 +66,18 @@ export default function Properties() {
                     </CardDescription>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex-grow flex flex-col justify-between">
                   <div className="flex flex-wrap gap-2">
                     {prop.tags.map((tag) => (
                       <Badge key={tag} variant="secondary" className="bg-accent/10 text-accent border-accent/20 font-body">{tag}</Badge>
                     ))}
+                  </div>
+                  <div className="mt-6">
+                    <Button asChild variant="outline" className="w-full">
+                      <Link href={`/properties/${prop.id}`}>
+                        View Collection <ArrowRight className="ml-2 h-4 w-4" />
+                      </Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
