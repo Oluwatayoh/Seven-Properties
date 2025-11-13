@@ -7,9 +7,9 @@ import { useCollection, WithId } from '@/firebase/firestore/use-collection';
 import type { PropertyCollection } from '@/lib/properties-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, PlusCircle, Trash2 } from 'lucide-react';
+import { Loader2, PlusCircle, Trash2, Edit } from 'lucide-react';
 import { CollectionForm, CollectionFormState } from './CollectionForm';
-import { addPropertyCollection, deletePropertyCollection } from '@/lib/properties-data';
+import { addPropertyCollection, deletePropertyCollection, updatePropertyCollection } from '@/lib/properties-data';
 import { useToast } from '@/hooks/use-toast';
 import ManageProperties from './ManageProperties';
 import {
@@ -22,30 +22,57 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+
+
+const readFileAsDataURL = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
 
 export default function ManageCollections() {
   const firestore = useFirestore();
   const { toast } = useToast();
-  const [isAdding, setIsAdding] = useState(false);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<WithId<PropertyCollection> | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<WithId<PropertyCollection> | null>(null);
 
   const collectionsQuery = useMemo(() => collection(firestore, 'propertyCollections'), [firestore]);
   const { data: collections, isLoading } = useCollection<PropertyCollection>(collectionsQuery);
 
-  const handleAddCollection = async (data: CollectionFormState) => {
+  const handleFormSubmit = async (data: CollectionFormState) => {
     if (!data.title || !data.location || !data.description) return;
-    try {
-      await addPropertyCollection(firestore, {
+    
+    let imageUrl: string | undefined = editingCollection?.imageUrl;
+    if (data.image && data.image.length > 0) {
+        imageUrl = await readFileAsDataURL(data.image[0]);
+    }
+
+    const collectionData = {
         title: data.title,
         location: data.location,
         description: data.description,
-        tags: data.tags.split(',').map(t => t.trim()).filter(Boolean),
-      });
-      toast({ title: 'Success', description: 'Property collection added.' });
-      setIsAdding(false);
+        tags: data.tags?.split(',').map(t => t.trim()).filter(Boolean) || [],
+        imageUrl: imageUrl,
+        imageHint: data.imageHint || '',
+    };
+    
+    try {
+      if (editingCollection) {
+        await updatePropertyCollection(firestore, editingCollection.id, collectionData);
+        toast({ title: 'Success', description: 'Property collection updated.' });
+      } else {
+        await addPropertyCollection(firestore, collectionData);
+        toast({ title: 'Success', description: 'Property collection added.' });
+      }
+      setIsFormOpen(false);
+      setEditingCollection(null);
     } catch (e) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Could not add property collection.' });
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not save property collection.' });
     }
   };
 
@@ -60,6 +87,21 @@ export default function ManageCollections() {
       toast({ variant: 'destructive', title: 'Error', description: 'Could not delete property collection. Make sure all properties inside are deleted first.' });
     }
   };
+
+  const openFormForEdit = (collection: WithId<PropertyCollection>) => {
+    setEditingCollection(collection);
+    setIsFormOpen(true);
+  };
+  
+  const openFormForAdd = () => {
+    setEditingCollection(null);
+    setIsFormOpen(true);
+  };
+
+  const closeForm = () => {
+    setIsFormOpen(false);
+    setEditingCollection(null);
+  }
 
   if (isLoading) {
     return (
@@ -81,49 +123,56 @@ export default function ManageCollections() {
           <CardDescription>Manage your property groupings. Click a collection to manage its properties.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {collections && collections.map(col => (
-            <div key={col.id} className="flex items-center justify-between p-4 rounded-lg border bg-background hover:bg-muted/50 transition-colors">
+          {!isFormOpen && collections && collections.map(col => (
+            <div key={col.id} className="flex items-center justify-between p-4 rounded-lg border bg-background hover:bg-muted/50 transition-colors group">
               <button onClick={() => setSelectedCollection(col)} className="text-left flex-grow">
                 <h3 className="font-semibold text-lg">{col.title}</h3>
                 <p className="text-sm text-muted-foreground">{col.location}</p>
               </button>
-               <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete the collection.
-                      You must delete all properties in this collection first.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => handleDelete(col.id)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
+              <div className="flex items-center gap-2">
+                 <Button variant="ghost" size="icon" onClick={() => openFormForEdit(col)}>
+                    <Edit className="h-4 w-4" />
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the collection.
+                        You must delete all properties in this collection first.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleDelete(col.id)} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             </div>
           ))}
-          {(!collections || collections.length === 0) && !isAdding && (
+
+          {(!collections || collections.length === 0) && !isFormOpen && (
             <p className="text-muted-foreground text-center py-8">No collections found.</p>
           )}
 
-          {isAdding && (
+          {isFormOpen && (
              <CollectionForm
-                onSubmit={handleAddCollection}
-                onCancel={() => setIsAdding(false)}
+                onSubmit={handleFormSubmit}
+                onCancel={closeForm}
+                initialData={editingCollection ? { ...editingCollection, tags: editingCollection.tags.join(', ') } : undefined}
                 />
           )}
 
         </CardContent>
         <CardFooter>
-            {!isAdding && (
-                 <Button onClick={() => setIsAdding(true)} variant="outline">
+            {!isFormOpen && (
+                 <Button onClick={openFormForAdd} variant="outline">
                     <PlusCircle className="mr-2 h-4 w-4" />
                     Add Collection
                 </Button>

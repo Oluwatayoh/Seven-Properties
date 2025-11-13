@@ -13,6 +13,15 @@
           "type": "array",
           "description": "Descriptive tags for the collection.",
           "items": { "type": "string" }
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the collection's main image."
+        },
+        "imageHint": {
+          "type": "string",
+          "description": "AI hint for generating the collection image."
         }
       },
       "required": ["id", "title", "location", "description"]

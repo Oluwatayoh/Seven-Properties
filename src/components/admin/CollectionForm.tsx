@@ -7,12 +7,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useState } from 'react';
+import Image from 'next/image';
 
 const formSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters long.'),
   location: z.string().min(2, 'Location is required.'),
   description: z.string().min(10, 'Description is required.'),
   tags: z.string().optional(),
+  image: z.custom<FileList>().optional(),
+  imageHint: z.string().optional(),
 });
 
 export type CollectionFormState = z.infer<typeof formSchema>;
@@ -20,10 +24,12 @@ export type CollectionFormState = z.infer<typeof formSchema>;
 interface CollectionFormProps {
   onSubmit: (data: CollectionFormState) => void;
   onCancel: () => void;
-  initialData?: Partial<CollectionFormState>;
+  initialData?: Partial<Omit<CollectionFormState, 'image'> & { imageUrl?: string }>;
 }
 
 export function CollectionForm({ onSubmit, onCancel, initialData }: CollectionFormProps) {
+  const [imagePreview, setImagePreview] = useState<string | undefined>(initialData?.imageUrl);
+  
   const form = useForm<CollectionFormState>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,8 +37,21 @@ export function CollectionForm({ onSubmit, onCancel, initialData }: CollectionFo
       location: initialData?.location || '',
       description: initialData?.description || '',
       tags: initialData?.tags || '',
+      imageHint: initialData?.imageHint || '',
     },
   });
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue('image', event.target.files);
+    }
+  };
 
   return (
     <Form {...form}>
@@ -89,9 +108,43 @@ export function CollectionForm({ onSubmit, onCancel, initialData }: CollectionFo
             </FormItem>
           )}
         />
+         <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Collection Image</FormLabel>
+              <FormControl>
+                <Input type="file" accept="image/*" onChange={handleImageChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {imagePreview && (
+          <div className="relative w-full h-48 rounded-md overflow-hidden">
+            <Image src={imagePreview} alt="Image preview" fill style={{ objectFit: 'cover' }} />
+          </div>
+        )}
+
+        <FormField
+          control={form.control}
+          name="imageHint"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image Hint</FormLabel>
+              <FormControl>
+                <Input placeholder="e.g., modern building" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <div className="flex justify-end gap-2">
           <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
-          <Button type="submit">{initialData ? 'Save Changes' : 'Create Collection'}</Button>
+          <Button type="submit">{initialData?.title ? 'Save Changes' : 'Create Collection'}</Button>
         </div>
       </form>
     </Form>
