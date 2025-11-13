@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedSection } from '@/components/AnimatedSection';
 import { Wand2, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -51,7 +50,7 @@ export default function KeywordTool() {
 
 
   return (
-    <AnimatedSection className="py-24 sm:py-32 bg-primary/5">
+    <section className="py-24 sm:py-32 bg-primary/5">
       <div className="container mx-auto px-6 lg:px-8">
         <Card className="max-w-3xl mx-auto shadow-lg border-accent/20 bg-card">
           <CardHeader>
@@ -104,6 +103,6 @@ export default function KeywordTool() {
           )}
         </Card>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }

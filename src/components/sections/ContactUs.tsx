@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AnimatedSection } from '@/components/AnimatedSection';
 import { Mail, Loader2, Send } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -87,7 +86,7 @@ export default function ContactUs() {
 
   return (
     <>
-      <AnimatedSection id="contact-us" className="py-24 sm:py-32">
+      <section id="contact-us" className="py-24 sm:py-32">
         <div className="container mx-auto px-6 lg:px-8">
           <Card className="max-w-3xl mx-auto shadow-lg border-accent/20 bg-card">
             <CardHeader>
@@ -126,20 +125,18 @@ export default function ContactUs() {
             </form>
           </Card>
         </div>
-      </AnimatedSection>
-      <AnimatedSection>
-          <div className="h-[400px] w-full bg-muted">
-             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63426.24831627581!2d3.398642578508434!3d6.444985655523072!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9a87f36743964b!2sIkoyi%2C%20Lagos%20106104%2C%20Lagos!5e0!3m2!1sen!2sng!4v1721833502852!5m2!1sen!2sng"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-             ></iframe>
-          </div>
-      </AnimatedSection>
+      </section>
+      <div className="h-[400px] w-full bg-muted">
+         <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63426.24831627581!2d3.398642578508434!3d6.444985655523072!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9a87f36743964b!2sIkoyi%2C%20Lagos%20106104%2C%20Lagos!5e0!3m2!1sen!2sng!4v1721833502852!5m2!1sen!2sng"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+         ></iframe>
+      </div>
     </>
   );
 }

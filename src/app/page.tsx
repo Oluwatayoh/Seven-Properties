@@ -5,6 +5,7 @@ import Properties from '@/components/sections/Properties';
 import Diaspora from '@/components/sections/Diaspora';
 import KeywordTool from '@/components/sections/KeywordTool';
 import ContactUs from '@/components/sections/ContactUs';
+import { AnimatedSection } from '@/components/AnimatedSection';
 
 export default function Home() {
   return (
@@ -13,10 +14,18 @@ export default function Home() {
       <div className="flex-1">
         <Hero />
         <div className="relative z-10 bg-background">
+          <AnimatedSection>
             <Properties />
+          </AnimatedSection>
+          <AnimatedSection>
             <Diaspora />
+          </AnimatedSection>
+          <AnimatedSection>
             <ContactUs />
+          </AnimatedSection>
+          <AnimatedSection>
             <KeywordTool />
+          </AnimatedSection>
         </div>
       </div>
       <Footer />

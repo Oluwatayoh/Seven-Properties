@@ -3,7 +3,7 @@ import { AnimatedSection } from '@/components/AnimatedSection';
 
 export default function Diaspora() {
   return (
-    <AnimatedSection className="py-24 sm:py-32">
+    <section className="py-24 sm:py-32">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-x-16 gap-y-10 lg:grid-cols-2">
           <div>
@@ -37,6 +37,6 @@ export default function Diaspora() {
           </div>
         </div>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }

@@ -27,7 +27,7 @@ export default function Properties() {
 
   if (isLoading) {
     return (
-      <AnimatedSection className="py-24 sm:py-32 bg-primary/5">
+      <section className="py-24 sm:py-32 bg-primary/5">
         <div className="container mx-auto px-6 lg:px-8">
             <div className="text-center">
               <h2 className="font-headline text-4xl text-primary">Our Signature Residences</h2>
@@ -36,12 +36,12 @@ export default function Properties() {
               </p>
             </div>
         </div>
-      </AnimatedSection>
+      </section>
     );
   }
 
   return (
-    <AnimatedSection className="py-24 sm:py-32 bg-primary/5">
+    <section className="py-24 sm:py-32 bg-primary/5">
       <div className="container mx-auto px-6 lg:px-8">
         <div className="text-center">
           <h2 className="font-headline text-4xl text-primary">Our Signature Residences</h2>
@@ -52,45 +52,50 @@ export default function Properties() {
         <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {collections?.map((prop: WithId<PropertyCollection>) => {
             return (
-              <Card key={prop.id} className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 border-accent/20 bg-card flex flex-col">
-                <CardHeader className="p-0">
-                  <div className="relative h-64 w-full">
-                    <Image
-                      src={prop.imageUrl || defaultImage.imageUrl}
-                      alt={prop.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      className="object-cover"
-                      data-ai-hint={prop.imageHint || defaultImage.imageHint}
-                    />
-                  </div>
-                  <div className="p-6">
-                    <CardTitle className="font-headline text-2xl text-primary">{prop.title}</CardTitle>
-                    <CardDescription className="flex items-center gap-2 pt-2 text-accent font-body">
-                      <MapPin className="h-4 w-4" />
-                      {prop.location}
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent className="flex-grow flex flex-col justify-between">
-                  <div className="flex flex-wrap gap-2">
-                    {prop.tags?.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="bg-accent/10 text-accent border-accent/20 font-body">{tag}</Badge>
-                    ))}
-                  </div>
-                  <div className="mt-6">
-                    <Button asChild variant="outline" className="w-full">
-                      <Link href={`/properties/${prop.id}`}>
-                        View Collection <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <AnimatedSection key={prop.id} as="div">
+                <Card className="overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 border-accent/20 bg-card flex flex-col h-full">
+                  <CardHeader className="p-0">
+                    <div className="relative h-64 w-full">
+                      <Image
+                        src={prop.imageUrl || defaultImage.imageUrl}
+                        alt={prop.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        className="object-cover"
+                        data-ai-hint={prop.imageHint || defaultImage.imageHint}
+                      />
+                    </div>
+                    <div className="p-6">
+                      <CardTitle className="font-headline text-2xl text-primary">{prop.title}</CardTitle>
+                      <CardDescription className="flex items-center gap-2 pt-2 text-accent font-body">
+                        <MapPin className="h-4 w-4" />
+                        {prop.location}
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="flex-grow flex flex-col justify-between">
+                    <div>
+                      <p className="font-body text-sm text-foreground/80 mb-4">{prop.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {prop.tags?.map((tag) => (
+                          <Badge key={tag} variant="secondary" className="bg-accent/10 text-accent border-accent/20 font-body">{tag}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="mt-6">
+                      <Button asChild variant="outline" className="w-full">
+                        <Link href={`/properties/${prop.id}`}>
+                          View Collection <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </AnimatedSection>
             );
           })}
         </div>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }
