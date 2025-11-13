@@ -3,9 +3,21 @@
 import { Building2, Shield } from 'lucide-react';
 import Link from 'next/link';
 import { useUser } from '@/firebase/auth/use-user';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
   const { user } = useUser();
+  const pathname = usePathname();
+
+  const handleContactClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      const contactSection = document.getElementById('contact-us');
+      if (contactSection) {
+        contactSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -16,10 +28,14 @@ export default function Header() {
             <span className="font-bold font-headline text-lg text-primary">Seven Properties</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
-            <Link href="/#about-us" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link href="/about" className="text-foreground/80 hover:text-primary transition-colors">
               About Us
             </Link>
-            <Link href="/#contact-us" className="text-foreground/80 hover:text-primary transition-colors">
+            <Link 
+              href="/#contact-us" 
+              onClick={handleContactClick}
+              className="text-foreground/80 hover:text-primary transition-colors"
+            >
               Contact Us
             </Link>
           </nav>
