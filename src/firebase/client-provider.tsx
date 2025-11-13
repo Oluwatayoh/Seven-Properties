@@ -3,7 +3,7 @@
 import { getApp, getApps, initializeApp, type FirebaseApp } from 'firebase/app';
 import { getAuth, type Auth } from 'firebase/auth';
 import { getFirestore, type Firestore } from 'firebase/firestore';
-import { FirebaseProvider } from './provider';
+import { FirebaseProvider } from '@/firebase/provider';
 import { firebaseConfig } from '@/firebase/config';
 
 let app: FirebaseApp;
