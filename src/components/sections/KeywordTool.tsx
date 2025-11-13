@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
+import { useFormStatus } from 'react-dom';
 import { handleGenerateKeywords, type FormState } from '@/app/actions';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -9,7 +10,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { AnimatedSection } from '@/components/AnimatedSection';
 import { Wand2, Loader2 } from 'lucide-react';
-import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 const initialState: FormState = {
@@ -36,7 +36,7 @@ function SubmitButton() {
 }
 
 export default function KeywordTool() {
-  const [state, formAction] = useFormState(handleGenerateKeywords, initialState);
+  const [state, formAction] = useActionState(handleGenerateKeywords, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
