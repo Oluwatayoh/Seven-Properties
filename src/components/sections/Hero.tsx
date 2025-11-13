@@ -45,7 +45,7 @@ export default function Hero() {
               Discover Seven Properties—where architectural brilliance meets bespoke luxury in the heart of Lagos.
             </p>
             <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90 font-body" asChild>
-              <Link href="/properties/ikoyi-residence">Explore Residences</Link>
+              <Link href="/collections">Explore Residences</Link>
             </Button>
         </AnimatedSection>
       </div>
