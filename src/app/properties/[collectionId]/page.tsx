@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Property, PropertyCollection } from '@/lib/properties-data';
@@ -15,14 +15,9 @@ import { useDoc, useCollection, WithId } from '@/firebase';
 import { doc, collection } from 'firebase/firestore';
 import { useMemo } from 'react';
 
-type Props = {
-  params: {
-    collectionId: string;
-  };
-};
-
-export default function CollectionPage({ params }: Props) {
-  const { collectionId } = params;
+export default function CollectionPage() {
+  const params = useParams();
+  const collectionId = params.collectionId as string;
   const firestore = useFirestore();
 
   const collectionQuery = useMemo(() => doc(firestore, 'propertyCollections', collectionId), [firestore, collectionId]);
