@@ -8,7 +8,7 @@ import { Property, PropertyCollection } from '@/lib/properties-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { Separator } from '@/components/ui/separator';
-import { BedDouble, Bath, Square, Loader2, Building } from 'lucide-react';
+import { BedDouble, Bath, Square, Loader2, Building, Construction } from 'lucide-react';
 import { AnimatedSection } from '@/components/AnimatedSection';
 import { useFirestore } from '@/firebase';
 import { useDoc, useCollection, WithId } from '@/firebase';
@@ -127,12 +127,21 @@ export default function CollectionPage({ params: { collectionId } }: Props) {
               </AnimatedSection>
             ))}
              {(!properties || properties.length === 0) && (
-                <div className="text-center py-16">
-                    <h2 className="font-headline text-3xl text-primary">Coming Soon</h2>
-                    <p className="mt-4 font-body text-lg text-foreground/80">
-                        Properties for this collection will be unveiled shortly.
-                    </p>
-                </div>
+                <AnimatedSection>
+                  <Card className="text-center py-20 px-8 shadow-lg border-accent/20 bg-card">
+                    <div className="flex justify-center mb-6">
+                      <Construction className="h-16 w-16 text-primary/50" strokeWidth={1.5} />
+                    </div>
+                    <CardHeader>
+                      <CardTitle className="font-headline text-4xl text-primary">Unveiling Soon</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="mt-2 font-body text-lg text-foreground/80 max-w-xl mx-auto">
+                        Exquisite properties for this exclusive collection are being finalized. Check back shortly for a showcase of unparalleled luxury.
+                      </p>
+                    </CardContent>
+                  </Card>
+                </AnimatedSection>
             )}
           </div>
         </div>
