@@ -7,9 +7,9 @@ import Image from 'next/image';
 
 export default function Hero() {
   return (
-    <div className="relative h-screen w-full">
+    <div className="relative h-screen w-full overflow-hidden">
         {/* Parallax Background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute inset-0 z-0">
             <Image
                 src="https://picsum.photos/seed/hero/1800/1200"
                 alt="Luxurious modern home exterior"
@@ -17,6 +17,7 @@ export default function Hero() {
                 className="object-cover"
                 priority
                 data-ai-hint="luxury estate"
+                style={{ transform: 'translateZ(-1px) scale(1.5)' }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
         </div>
