@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "PropertyCollection": {
@@ -42,8 +43,12 @@
         "propertyType": {
           "type": "string",
           "description": "The type of property.",
-          "enum": ["Land", "Apartment", "Commercial"]
+          "enum": ["Land", "Apartment", "Commercial", "Simplex", "Penthouse", "Duplex"]
         },
+        "totalUnits": { "type": "number" },
+        "floors": { "type": "number" },
+        "availableFloors": { "type": "string" },
+        "positioningLine": { "type": "string" },
         "imageUrls": {
           "type": "array",
           "description": "URLs of the property's images.",
@@ -55,7 +60,7 @@
             "items": { "type": "string" }
         }
       },
-      "required": ["id", "title", "description", "price", "bedrooms", "bathrooms", "sqft", "imageUrls", "propertyType"]
+      "required": ["id", "title", "description", "price", "imageUrls", "propertyType"]
     },
     "Content": {
       "$schema": "http://json-schema.org/draft-07/schema#",

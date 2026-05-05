@@ -1,3 +1,4 @@
+
 import { collection, doc, getDocs, getDoc, setDoc, deleteDoc, addDoc, Firestore, CollectionReference, DocumentReference } from 'firebase/firestore';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -16,11 +17,15 @@ export type Property = {
   id: string;
   title: string;
   price: string;
-  bedrooms: number;
-  bathrooms: number;
-  sqft: number;
+  bedrooms?: number;
+  bathrooms?: number;
+  sqft?: number;
   description: string;
-  propertyType: 'Land' | 'Apartment' | 'Commercial';
+  propertyType: 'Land' | 'Apartment' | 'Commercial' | 'Simplex' | 'Penthouse' | 'Duplex';
+  totalUnits?: number;
+  floors?: number;
+  availableFloors?: string;
+  positioningLine?: string;
   imageUrls: string[];
   imageHints: string[];
 };
@@ -74,7 +79,6 @@ export const updatePropertyCollection = (db: Firestore, id: string, data: Partia
 };
 
 export const deletePropertyCollection = (db: Firestore, id: string) => {
-    // Note: This doesn't delete subcollections. In a real app, you'd need a Cloud Function for that.
     return deleteDoc(collectionRef(db, id))
         .catch(error => {
             errorEmitter.emit('permission-error', new FirestorePermissionError({
